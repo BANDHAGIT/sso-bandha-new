@@ -1,33 +1,67 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext'; // Commented out for development
 import logo from '../assets/bandhayudha-logo.png';
+import moodleLogo from '../assets/moodle-logo.png';
+import nextcloudLogo from '../assets/nextcloud-logo.png';
+import udemylogo from '../assets/udemy-logo.png';
+import n8nlogo from '../assets/n8n-logo.png';
+import openprojectlogo from '../assets/openproject-logo.png';
 
-const Dashboard = () => {
-  const { user, logout } = useAuth();
+function Dashboard() {
+  // const { user, logout } = useAuth(); // Commented out for development
+  
+  // Mock user data for development
+  const user = {
+    name: 'Development User',
+    email: 'dev@example.com'
+  };
+
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const applications = [
-    { name: 'Drive', url: 'https://drive.bandhayudha.icu', icon: '💾', description: 'File Storage & Sharing' },
-    { name: 'BandhaLab', url: 'https://bandhalab.bandhayudha.icu', icon: '🔬', description: 'Virtual Laboratory' },
-    { name: 'Udemy', url: 'https://udemy.bandhayudha.icu', icon: '📚', description: 'Online Learning Platform' },
-    { name: 'WiFi Connect Guide', url: 'https://wifi-guide.bandhayudha.icu', icon: '📶', description: 'Panduan Koneksi WiFi' },
-    { name: 'News', url: 'https://news.bandhayudha.icu', icon: '📰', description: 'Berita & Pengumuman' },
-    { name: 'N8N', url: 'https://n8n.bandhayudha.icu', icon: '⚡', description: 'Workflow Automation' },
-    { name: 'Task Management', url: 'https://tasks.bandhayudha.icu', icon: '✅', description: 'Project & Task Manager' },
+    { 
+      name: 'Drive', 
+      url: 'https://drive.bandhayudha.com', 
+      icon: nextcloudLogo, 
+      description: 'File Storage & Sharing',
+      isImage: true
+    },
+    { 
+      name: 'BandhaLab', 
+      url: 'https://lab.bandhayudha.com', 
+      icon: moodleLogo, 
+      description: 'Virtual Laboratory',
+      isImage: true
+    },
+    { name: 'Udemy', 
+      url: 'https://udemy.bandhayudha.com', 
+      icon: udemylogo, 
+      description: 'Online Learning Platform',
+      isImage: true
+    },
+    { name: 'WiFi Connect Guide', url: 'https://wifi-guide.bandhayudha.com', icon: '📶', description: 'Panduan Koneksi WiFi' },
+    { name: 'News', url: 'https://news.bandhayudha.com', icon: '📰', description: 'Berita & Pengumuman' },
+    { name: 'N8N', 
+      url: 'https://n8n.bandhayudha.com', 
+      icon: n8nlogo, 
+      description: 'Workflow Automation',
+      isImage: true
+    },
+    { name: 'Task Management', 
+      url: 'https://task.bandhayudha.com', 
+      icon: openprojectlogo, 
+      description: 'Project & Task Manager',
+      isImage: true
+    },
   ];
 
   const handleAppClick = (url) => window.open(url, '_blank');
 
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-      // Fallback jika logout gagal
-      window.location.href = '/';
-    }
+  const handleLogout = () => {
+    console.log('Logout clicked - development mode');
+    // Redirect to login or show logout UI
+    window.location.href = '/login';
   };
 
   return (
@@ -37,7 +71,7 @@ const Dashboard = () => {
           <img src={logo} alt="Bandhayudha Logo" className="header-logo" />
           <div className="header-text">
             <h1>Dashboard SSO Bandhayudha</h1>
-            <p>Selamat datang, {user?.profile?.name || user?.profile?.preferred_username || 'User'}!</p>
+            <p>Selamat datang, {user?.name || 'User'}!</p>
           </div>
         </div>
         <div className="header-right">
@@ -63,13 +97,8 @@ const Dashboard = () => {
               <button className="close-button" onClick={() => setShowProfile(false)}>×</button>
             </div>
             <div className="profile-content">
-              <div className="profile-item"><strong>Nama:</strong> {user?.profile?.name || 'N/A'}</div>
-              <div className="profile-item"><strong>Username:</strong> {user?.profile?.preferred_username || 'N/A'}</div>
-              <div className="profile-item"><strong>Email:</strong> {user?.profile?.email || 'N/A'}</div>
-              <div className="profile-item"><strong>Subject ID:</strong> {user?.profile?.sub || 'N/A'}</div>
-              {user?.profile?.groups && (
-                <div className="profile-item"><strong>Groups:</strong> {user.profile.groups.join(', ')}</div>
-              )}
+              <div className="profile-item"><strong>Nama:</strong> {user?.name || 'N/A'}</div>
+              <div className="profile-item"><strong>Email:</strong> {user?.email || 'N/A'}</div>
             </div>
           </div>
         </div>
@@ -80,7 +109,13 @@ const Dashboard = () => {
         <div className="apps-grid">
           {applications.map((app) => (
             <div key={app.name} className="app-card" onClick={() => handleAppClick(app.url)}>
-              <div className="app-icon">{app.icon}</div>
+              <div className="app-icon">
+                {app.isImage ? (
+                  <img src={app.icon} alt={`${app.name} icon`} className="app-icon-image" />
+                ) : (
+                  app.icon
+                )}
+              </div>
               <h3>{app.name}</h3>
               <p>{app.description}</p>
             </div>
@@ -89,6 +124,6 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Dashboard;
