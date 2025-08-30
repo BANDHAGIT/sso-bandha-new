@@ -1,42 +1,30 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import logo from '../assets/bandhayudha-logo.png';
+// import { useAuth } from '../contexts/AuthContext'; // Commented out for development
 
-const Login = () => {
-  const { login, isAuthenticated, isLoading } = useAuth();
+function Login() {
+  // const { login } = useAuth(); // Commented out for development
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [isAuthenticated, isLoading, navigate]);
-
-  if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        Loading...
-      </div>
-    );
-  }
-
-  if (isAuthenticated) return null;
+  const handleLogin = () => {
+    console.log('Login clicked - development mode');
+    // Directly navigate to dashboard in development mode
+    navigate('/dashboard');
+  };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-      <div className="auth-container">
-        <img src={logo} alt="Bandhayudha Logo" />
-        <h1>Single Sign On (SSO)</h1>
-        <h2>Bandhayudha</h2>
-        <p>Silahkan Masuk</p>
-        <button className="login-button" onClick={login}>
-          <img src={logo} alt="Bandhayudha Logo" />
-          SSO Bandhayudha
+    <div className="login-container">
+      <div className="login-card">
+        <h1>Login</h1>
+        <div className="development-notice">
+          <p><strong>Development Mode:</strong> Authentication is disabled</p>
+        </div>
+        <button onClick={handleLogin} className="login-btn">
+          Enter Dashboard (Dev Mode)
         </button>
       </div>
     </div>
   );
-};
+}
 
 export default Login;
