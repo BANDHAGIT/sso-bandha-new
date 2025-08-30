@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { useAuth } from '../contexts/AuthContext'; // Commented out for development
 import logo from '../assets/bandhayudha-logo.png';
 import moodleLogo from '../assets/moodle-logo.png';
 import nextcloudLogo from '../assets/nextcloud-logo.png';
@@ -8,16 +7,12 @@ import n8nlogo from '../assets/n8n-logo.png';
 import openprojectlogo from '../assets/openproject-logo.png';
 
 function Dashboard() {
-  // const { user, logout } = useAuth(); // Commented out for development
-  
-  // Mock user data for development
   const user = {
     name: 'Development User',
     email: 'dev@example.com'
   };
 
   const [showProfile, setShowProfile] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const applications = [
     { 
@@ -34,94 +29,120 @@ function Dashboard() {
       description: 'Virtual Laboratory',
       isImage: true
     },
-    { name: 'Udemy', 
+    { 
+      name: 'Udemy', 
       url: 'https://udemy.bandhayudha.com', 
       icon: udemylogo, 
       description: 'Online Learning Platform',
       isImage: true
     },
-    { name: 'WiFi Connect Guide', url: 'https://wifi-guide.bandhayudha.com', icon: '📶', description: 'Panduan Koneksi WiFi' },
-    { name: 'News', url: 'https://news.bandhayudha.com', icon: '📰', description: 'Berita & Pengumuman' },
-    { name: 'N8N', 
+    { 
+      name: 'WiFi Guide', 
+      url: 'https://wifi-guide.bandhayudha.com', 
+      icon: '📶', 
+      description: 'Panduan Koneksi WiFi' 
+    },
+    { 
+      name: 'News', 
+      url: 'https://bandhayudha.com/news', 
+      icon: '📰', 
+      description: 'Berita & Pengumuman' 
+    },
+    { 
+      name: 'N8N', 
       url: 'https://n8n.bandhayudha.com', 
       icon: n8nlogo, 
       description: 'Workflow Automation',
       isImage: true
     },
-    { name: 'Task Management', 
+    { 
+      name: 'Task Management', 
       url: 'https://task.bandhayudha.com', 
       icon: openprojectlogo, 
       description: 'Project & Task Manager',
       isImage: true
-    },
+    }
   ];
 
   const handleAppClick = (url) => window.open(url, '_blank');
 
   const handleLogout = () => {
     console.log('Logout clicked - development mode');
-    // Redirect to login or show logout UI
     window.location.href = '/login';
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="header-left">
-          <img src={logo} alt="Bandhayudha Logo" className="header-logo" />
-          <div className="header-text">
-            <h1>Dashboard SSO Bandhayudha</h1>
-            <p>Selamat datang, {user?.name || 'User'}!</p>
+    <div className="dashboard-wrapper">
+      {/* Header */}
+      <header className="dashboard-header-new">
+        <div className="header-container">
+          <div className="header-left">
+            <img src={logo} alt="Bandhayudha Logo" className="header-logo-new" />
+            <div className="header-brand">
+              <h1>Bandhayudha</h1>
+              <span>Single Sign-On Portal</span>
+            </div>
+          </div>
+          <div className="header-right">
+            <div className="user-menu" onClick={() => setShowProfile(!showProfile)}>
+              <div className="user-avatar">
+                <span>{user?.name?.charAt(0) || 'U'}</span>
+              </div>
+              <span className="user-name">{user?.name || 'User'}</span>
+              <span className="dropdown-arrow">▼</span>
+            </div>
           </div>
         </div>
-        <div className="header-right">
-          <button className="profile-button" onClick={() => setShowProfile(!showProfile)}>
-            <span className="profile-icon">👤</span>
-            Profile
-          </button>
-          <button 
-            className="logout-button" 
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-          >
-            {isLoggingOut ? 'Logging out...' : 'Logout'}
-          </button>
-        </div>
-      </div>
+      </header>
 
+      {/* Profile Dropdown */}
       {showProfile && (
-        <div className="profile-modal-overlay" onClick={() => setShowProfile(false)}>
-          <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="profile-header">
-              <h3>Informasi Profile</h3>
-              <button className="close-button" onClick={() => setShowProfile(false)}>×</button>
+        <div className="profile-dropdown-overlay" onClick={() => setShowProfile(false)}>
+          <div className="profile-dropdown" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-info">
+              <div className="profile-avatar">
+                <span>{user?.name?.charAt(0) || 'U'}</span>
+              </div>
+              <div className="profile-details">
+                <h4>{user?.name || 'N/A'}</h4>
+                <p>{user?.email || 'N/A'}</p>
+              </div>
             </div>
-            <div className="profile-content">
-              <div className="profile-item"><strong>Nama:</strong> {user?.name || 'N/A'}</div>
-              <div className="profile-item"><strong>Email:</strong> {user?.email || 'N/A'}</div>
-            </div>
+            <hr />
+            <button className="logout-btn-dropdown" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </div>
       )}
 
-      <div className="apps-section">
-        <h2>Layanan Bandhayudha</h2>
-        <div className="apps-grid">
-          {applications.map((app) => (
-            <div key={app.name} className="app-card" onClick={() => handleAppClick(app.url)}>
-              <div className="app-icon">
-                {app.isImage ? (
-                  <img src={app.icon} alt={`${app.name} icon`} className="app-icon-image" />
-                ) : (
-                  app.icon
-                )}
+      {/* Main Content */}
+      <main className="dashboard-main">
+        <div className="dashboard-content">
+          {/* Welcome Section */}
+          <div className="welcome-section">
+            <h2>Welcome to your Bandhayudha dashboard</h2>
+            <p>Please select your required application to login</p>
+          </div>
+
+          {/* Applications Grid */}
+          <div className="applications-grid">
+            {applications.map((app) => (
+              <div key={app.name} className="app-card-new" onClick={() => handleAppClick(app.url)}>
+                <div className="app-icon-container">
+                  {app.isImage ? (
+                    <img src={app.icon} alt={`${app.name} icon`} className="app-icon-img" />
+                  ) : (
+                    <span className="app-icon-emoji">{app.icon}</span>
+                  )}
+                </div>
+                <h3 className="app-name">{app.name}</h3>
+                <p className="app-description">{app.description}</p>
               </div>
-              <h3>{app.name}</h3>
-              <p>{app.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
