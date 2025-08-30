@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children }) => {
 
   if ((isLoading && timedOut) || !isAuthenticated || !user) {
     // Jika masih loading lewat 10 detik ATAU belum autentik → balik ke login
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

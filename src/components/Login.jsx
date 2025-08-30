@@ -1,83 +1,62 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { KeyRound } from 'lucide-react';
 import loginBg from '../assets/login-bg.jpg';
+import { useAuth } from '../contexts/AuthContext'; 
+import LoginIcon from '../assets/Bandha no bg.png';// Pastikan path ini benar
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // Mengambil fungsi dan state dari AuthContext
+  const { login, isAuthenticated, isLoading, error } = useAuth();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+  // useEffect untuk redirect otomatis jika user sudah login
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
-    // Simulate loading delay
-    setTimeout(() => {
-      // Check credentials
-      if (email === 'testuser' && password === 'testuser') {
-        console.log('Login successful');
-        navigate('/dashboard');
-      } else {
-        setError('Invalid username or password. Use testuser/testuser');
-      }
-      setIsLoading(false);
-    }, 1000);
+  // Fungsi untuk menangani klik pada tombol login
+  const handleLogin = () => {
+    // Memanggil fungsi login dari useAuth yang akan me-redirect ke halaman SSO provider
+    login();
   };
+  
+  // Jika sedang loading atau sudah terautentikasi, jangan tampilkan apa-apa (karena akan redirect)
+  if (isLoading || isAuthenticated) {
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f0f2f5' }}>
+            Loading authentication status...
+        </div>
+    );
+  }
 
   return (
     <div className="login-container-new" style={{backgroundImage: `url(${loginBg})`}}>
       <div className="login-card-new">
         <div className="login-icon">
-          <div className="login-key-icon">
-            <KeyRound size={32} color="#6b7280" />
+          <img src={LoginIcon} alt="Login Icon" style={{ width: '128px', height: '128px' }} />
           </div>
-        </div>
         
-        <h2 className="login-title">Sign in with email</h2>
+        <h2 className="login-title">Sign in to Your Account</h2>
         <p className="login-subtitle">Access your Bandhayudha dashboard</p>
         
+        {/* Menampilkan error jika ada dari proses login */}
         {error && (
           <div className="login-error">
-            {error}
+            {error.message || 'An authentication error occurred.'}
           </div>
         )}
         
-        <form onSubmit={handleLogin} className="login-form">
-          <div className="input-group">
-            <input
-              type="text"
-              placeholder="Username"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="login-input"
-              required
-              disabled={isLoading}
-            />
-          </div>
-          
-          <div className="input-group">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="login-input"
-              required
-              disabled={isLoading}
-            />
-          </div>
-          
-          <button type="submit" className="login-btn-new" disabled={isLoading}>
-            {isLoading ? 'Signing in...' : 'Get Started'}
+        {/* Tombol login yang memicu SSO, bukan submit form */}
+        <div className="login-form">
+          <button onClick={handleLogin} className="login-btn-new" disabled={isLoading}>
+            {isLoading ? 'Redirecting...' : 'Sign in with SSO'}
           </button>
-        </form>
+        </div>
         
         <div className="login-hint">
-          <small>Demo: testuser / testuser</small>
+          <small>You will be redirected to the official login page.</small>
         </div>
       </div>
     </div>

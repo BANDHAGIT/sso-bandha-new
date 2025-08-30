@@ -5,19 +5,53 @@ import nextcloudLogo from '../assets/nextcloud-logo.png';
 import udemylogo from '../assets/udemy-logo.png';
 import n8nlogo from '../assets/n8n-logo.png';
 import openprojectlogo from '../assets/openproject-logo.png';
+import { useAuth } from '../contexts/AuthContext';
+import './Dashboard.css';
 
 function Dashboard() {
-  const user = {
-    name: 'Development User',
-    email: 'dev@example.com'
-  };
+  const { user, logout } = useAuth();
+
+  const [showWiFiTutorial, setShowWiFiTutorial] = useState(false);
+  const [showNews, setShowNews] = useState(false);
+
+  // Komponen Modal untuk Tutorial WiFi
+  const WiFiTutorial = () => (
+    <div className="wifi-tutorial-overlay" onClick={() => setShowWiFiTutorial(false)}>
+      <div className="wifi-tutorial-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>Panduan Koneksi WiFi</h3>
+          <button className="close-button" onClick={() => setShowWiFiTutorial(false)}>×</button>
+        </div>
+        <div className="modal-content">
+          <h4>Langkah-langkah koneksi:</h4>
+          <ol>
+            <li>Hubungi Athaya Divisi Electric</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  );
+
+  const News = () => (
+    <div className="news-tutorial-overlay" onClick={() => setShowWiFiTutorial(false)}>
+      <div className="news-tutorial-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>News</h3>
+          <button className="close-button" onClick={() => setShowNews(false)}>×</button>
+        </div>
+        <div className="modal-content">
+          <h4>Under Maintenance</h4>
+        </div>
+      </div>
+    </div>
+  );
 
   const [showProfile, setShowProfile] = useState(false);
 
   const applications = [
     { 
       name: 'Drive', 
-      url: 'https://drive.bandhayudha.com', 
+      url: 'https://drive.bandhayudha.icu', 
       icon: nextcloudLogo, 
       description: 'File Storage & Sharing',
       isImage: true
@@ -38,15 +72,17 @@ function Dashboard() {
     },
     { 
       name: 'WiFi Guide', 
-      url: 'https://wifi-guide.bandhayudha.com', 
+      url: '#', // url bisa tetap ada atau dihapus
       icon: '📶', 
-      description: 'Panduan Koneksi WiFi' 
+      description: 'Panduan Koneksi WiFi',
+      action: () => setShowWiFiTutorial(true) // Aksi khusus
     },
     { 
       name: 'News', 
-      url: 'https://bandhayudha.com/news', 
+      url: '#', 
       icon: '📰', 
-      description: 'Berita & Pengumuman' 
+      description: 'Berita & Pengumuman',
+      action: () => setShowNews(true) 
     },
     { 
       name: 'N8N', 
@@ -63,13 +99,16 @@ function Dashboard() {
       isImage: true
     }
   ];
-
-  const handleAppClick = (url) => window.open(url, '_blank');
-
-  const handleLogout = () => {
-    console.log('Logout clicked - development mode');
-    window.location.href = '/login';
+  
+  // --- PERUBAHAN 1: Handler klik yang lebih cerdas ---
+  const handleCardClick = (app) => {
+    if (app.action) {
+      app.action();
+    } else if (app.url) {
+      window.open(app.url, '_blank');
+    }
   };
+
 
   return (
     <div className="dashboard-wrapper">
@@ -109,12 +148,16 @@ function Dashboard() {
               </div>
             </div>
             <hr />
-            <button className="logout-btn-dropdown" onClick={handleLogout}>
+            <button className="logout-btn-dropdown" onClick={logout}>
               Logout
             </button>
           </div>
         </div>
       )}
+
+      {/* Modal Tutorial WiFi */}
+      {showWiFiTutorial && <WiFiTutorial />}
+      {showNews && <News />}
 
       {/* Main Content */}
       <main className="dashboard-main">
@@ -128,7 +171,8 @@ function Dashboard() {
           {/* Applications Grid */}
           <div className="applications-grid">
             {applications.map((app) => (
-              <div key={app.name} className="app-card-new" onClick={() => handleAppClick(app.url)}>
+              // --- PERUBAHAN 2: Menggunakan handler baru di sini ---
+              <div key={app.name} className="app-card-new" onClick={() => handleCardClick(app)}>
                 <div className="app-icon-container">
                   {app.isImage ? (
                     <img src={app.icon} alt={`${app.name} icon`} className="app-icon-img" />

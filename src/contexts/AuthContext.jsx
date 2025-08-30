@@ -1,115 +1,70 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+// src/contexts/AuthContext.jsx
+
+import React, { createContext, useContext, useMemo } from 'react';
+import { AuthProvider as OidcProvider, useAuth as useOidc } from 'oidc-react';
 import userManager from '../services/authService';
 
-const AuthContext = createContext(null);
+const Ctx = createContext(null);
 
-export function useAuth() {
-  return useContext(AuthContext);
+function Adapter({ children }) {
+  const oidc = useOidc();
+  
+  const value = useMemo(() => {
+    const user = oidc.userData || null;
+    const isAuthenticated = !!user && !user.expired;
+
+    // --- PERUBAHAN DI SINI ---
+    // Buat fungsi logout kustom
+    const handleLogout = async () => {
+      try {
+        // Langkah 1: Hapus data user dari penyimpanan browser (penting!)
+        // Ini akan membersihkan sessionStorage/localStorage
+        await oidc.userManager.removeUser();
+
+        // Langkah 2: Arahkan secara manual ke halaman logout Keycloak
+        // Pengguna akan tetap di halaman ini dan tidak kembali otomatis.
+        window.location.href = 'https://auth.bandhayudha.icu/realms/SSO-Bandha/protocol/openid-connect/logout';
+
+      } catch (error) {
+        console.error('Error during logout:', error);
+      }
+    };
+
+    return {
+      user,
+      isAuthenticated,
+      isLoading: oidc.isLoading,
+      error: oidc.error || null,
+      login: () => oidc.signIn(),
+      // Gunakan fungsi logout kustom Anda
+      logout: handleLogout,
+      updateUser: () => {},
+    };
+  }, [oidc]);
+
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+// ... sisa file Anda tidak perlu diubah ...
+export function useAuth() {
+  return useContext(Ctx);
+}
 
-  useEffect(() => {
-    // Load user on mount
-    const loadUser = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        const currentUser = await userManager.getUser();
-        console.info('[AuthContext] Current user:', currentUser);
-        
-        if (currentUser && !currentUser.expired) {
-          setUser(currentUser);
-        } else {
-          setUser(null);
-        }
-      } catch (err) {
-        console.error('[AuthContext] Error loading user:', err);
-        // Jangan set error jika hanya userinfo yang bermasalah
-        if (!err?.message?.includes('userinfo') && !err?.message?.includes('Content-Type')) {
-          setError(err.message);
-        }
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadUser();
-
-    // Event listeners untuk user changes
-    const handleUserLoaded = (loadedUser) => {
-      console.info('[AuthContext] User loaded event:', loadedUser);
-      setUser(loadedUser);
-      setError(null);
-    };
-
-    const handleUserUnloaded = () => {
-      console.info('[AuthContext] User unloaded event');
-      setUser(null);
-    };
-
-    const handleUserSignedOut = () => {
-      console.info('[AuthContext] User signed out event');
-      setUser(null);
-      if (window.location.pathname !== '/') {
-        window.location.href = '/';
-      }
-    };
-
-    const handleSilentRenewError = (err) => {
-      console.warn('[AuthContext] Silent renew error:', err);
-      // Tidak set error atau redirect untuk silent renew error
-    };
-
-    userManager.events.addUserLoaded(handleUserLoaded);
-    userManager.events.addUserUnloaded(handleUserUnloaded);
-    userManager.events.addUserSignedOut(handleUserSignedOut);
-    userManager.events.addSilentRenewError(handleSilentRenewError);
-
-    return () => {
-      userManager.events.removeUserLoaded(handleUserLoaded);
-      userManager.events.removeUserUnloaded(handleUserUnloaded);
-      userManager.events.removeUserSignedOut(handleUserSignedOut);
-      userManager.events.removeSilentRenewError(handleSilentRenewError);
-    };
-  }, []);
-
-  const login = async () => {
-    try {
-      setError(null);
-      await userManager.signinRedirect();
-    } catch (err) {
-      console.error('[AuthContext] Login error:', err);
-      setError(err.message);
+export function AppAuthProvider({ children }) { 
+  const onSigninCallback = () => {
+    sessionStorage.setItem('oidc_cb_done', '1');
+    if (window.location.pathname.startsWith('/auth-callback')) {
+      window.history.replaceState({}, document.title, '/dashboard');
     }
   };
 
-  const logout = async () => {
-    try {
-      setError(null);
-      await userManager.signoutRedirect();
-    } catch (err) {
-      console.error('[AuthContext] Logout error:', err);
-      // Fallback logout
-      await userManager.removeUser();
-      window.location.href = '/';
-    }
-  };
-
-  const value = {
-    user,
-    isAuthenticated: !!user && !user.expired,
-    isLoading,
-    error,
-    login,
-    logout,
-    updateUser: () => {},
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <OidcProvider
+      userManager={userManager}
+      onSigninCallback={onSigninCallback}
+      autoSignIn={false}
+    >
+      <Adapter>{children}</Adapter>
+    </OidcProvider>
+  );
 }

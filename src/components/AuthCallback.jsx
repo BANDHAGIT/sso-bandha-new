@@ -1,73 +1,39 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import userManager from '../services/authService';
 
 const AuthCallback = () => {
+  const { isLoading, isAuthenticated, error } = useAuth();
   const navigate = useNavigate();
-  const [msg, setMsg] = useState('Processing authentication...');
-  const [hasError, setHasError] = useState(false);
-  const ranOnceRef = useRef(false);
-  const timeoutsRef = useRef([]);
+  const [msg, setMsg] = useState('Finishing authentication...');
 
   useEffect(() => {
-    if (ranOnceRef.current) return; // guard untuk Strict Mode (dev)
-    ranOnceRef.current = true;
+    if (!isLoading && isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isLoading, isAuthenticated, navigate]);
 
-    const handleCallback = async () => {
-      try {
-        const url = new URL(window.location.href);
-        const errorParam = url.searchParams.get('error');
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const hasCode = url.searchParams.get('code');
+    const hasState = url.searchParams.get('state');
+    const alreadyDone = sessionStorage.getItem('oidc_cb_done');
 
-        if (errorParam) {
-          const errorDescription = url.searchParams.get('error_description') || 'Unknown error';
-          setHasError(true);
-          setMsg(`Authentication error: ${errorDescription}`);
-          const t = setTimeout(() => navigate('/', { replace: true }), 3000);
-          timeoutsRef.current.push(t);
-          return;
+    if (hasCode && hasState && !alreadyDone) {
+      (async () => {
+        try {
+          setMsg('Completing authentication (fallback)...');
+          await userManager.signinRedirectCallback();
+          sessionStorage.setItem('oidc_cb_done', '1');
+          navigate('/dashboard', { replace: true });
+        } catch (e) {
+          console.error('[OIDC] fallback callback error:', e);
+          setMsg(`Authentication error: ${e?.message || 'Unknown error'}`);
+          setTimeout(() => navigate('/', { replace: true }), 3000);
         }
-
-        setMsg('Completing authentication...');
-        const user = await userManager.signinRedirectCallback();
-
-        console.info('[AuthCallback] Authentication successful:', user);
-        setMsg('Authentication successful! Redirecting...');
-        const t = setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
-        timeoutsRef.current.push(t);
-      } catch (error) {
-        console.error('[AuthCallback] Callback error:', error);
-
-        // Fallback bila error terkait userinfo/Content-Type
-        if (error?.message?.includes('userinfo') || error?.message?.includes('Content-Type')) {
-          console.warn('[AuthCallback] Userinfo error, checking for valid token...');
-          try {
-            const user = await userManager.getUser();
-            if (user && !user.expired) {
-              console.info('[AuthCallback] Valid user found despite userinfo error');
-              setMsg('Authentication successful! Redirecting...');
-              const t = setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
-              timeoutsRef.current.push(t);
-              return;
-            }
-          } catch (userError) {
-            console.error('[AuthCallback] Failed to get user:', userError);
-          }
-        }
-
-        setHasError(true);
-        setMsg(`Authentication failed: ${error?.message || 'Unknown error'}`);
-        const t = setTimeout(() => navigate('/', { replace: true }), 3000);
-        timeoutsRef.current.push(t);
-      }
-    };
-
-    handleCallback();
-
-    // Bersihkan timeout kalau komponen unmount
-    return () => {
-      timeoutsRef.current.forEach(clearTimeout);
-      timeoutsRef.current = [];
-    };
+      })();
+    }
   }, [navigate]);
 
   return (
@@ -81,25 +47,17 @@ const AuthCallback = () => {
       alignItems: 'center',
       fontFamily: 'monospace'
     }}>
-      <div style={{
-        fontSize: '1.2em',
-        marginBottom: 20,
-        color: hasError ? '#e74c3c' : '#2c3e50',
-        maxWidth: '600px',
-        wordWrap: 'break-word'
-      }}>
-        {msg}
+      <div style={{ fontSize: '1.2em', marginBottom: 20, color: '#2c3e50' }}>
+        {error ? `Authentication error: ${error}` : msg}
       </div>
-      {!hasError && (
-        <div style={{
-          width: 40, height: 40,
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #e74c3c',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          marginBottom: 20
-        }} />
-      )}
+      <div style={{
+        width: 40, height: 40,
+        border: '4px solid #f3f3f3',
+        borderTop: '4px solid #e74c3c',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+        marginBottom: 20
+      }} />
       <style>{`@keyframes spin {0%{transform:rotate(0)}100%{transform:rotate(360deg)}}`}</style>
     </div>
   );
