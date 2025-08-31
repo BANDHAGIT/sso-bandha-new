@@ -4,15 +4,16 @@ import moodleLogo from '../assets/moodle-logo.png';
 import nextcloudLogo from '../assets/nextcloud-logo.png';
 import udemylogo from '../assets/udemy-logo.png';
 import n8nlogo from '../assets/n8n-logo.png';
+import newslogo from '../assets/news-logo.png';
 import openprojectlogo from '../assets/openproject-logo.png';
 import { useAuth } from '../contexts/AuthContext';
-import './Dashboard.css';
 
 function Dashboard() {
   const { user, logout } = useAuth();
 
   const [showWiFiTutorial, setShowWiFiTutorial] = useState(false);
   const [showNews, setShowNews] = useState(false);
+  const [showUdemy, setShowUdemy] = useState(false);
 
   // Komponen Modal untuk Tutorial WiFi
   const WiFiTutorial = () => (
@@ -33,11 +34,25 @@ function Dashboard() {
   );
 
   const News = () => (
-    <div className="news-tutorial-overlay" onClick={() => setShowWiFiTutorial(false)}>
+    <div className="news-tutorial-overlay" onClick={() => setShowNews(false)}>
       <div className="news-tutorial-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>News</h3>
           <button className="close-button" onClick={() => setShowNews(false)}>×</button>
+        </div>
+        <div className="modal-content">
+          <h4>Under Maintenance</h4>
+        </div>
+      </div>
+    </div>
+  );
+
+  const Udemy = () => (
+    <div className="udemy-tutorial-overlay" onClick={() => setShowUdemy(false)}>
+      <div className="udemy-tutorial-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>Udemy</h3>
+          <button className="close-button" onClick={() => setShowUdemy(false)}>×</button>
         </div>
         <div className="modal-content">
           <h4>Under Maintenance</h4>
@@ -65,23 +80,25 @@ function Dashboard() {
     },
     { 
       name: 'Udemy', 
-      url: 'https://udemy.bandhayudha.com', 
+      url: '#', 
       icon: udemylogo, 
       description: 'Online Learning Platform',
-      isImage: true
+      isImage: true,
+      action: () => setShowUdemy(true)
     },
     { 
       name: 'WiFi Guide', 
-      url: '#', // url bisa tetap ada atau dihapus
+      url: '#',
       icon: '📶', 
       description: 'Panduan Koneksi WiFi',
-      action: () => setShowWiFiTutorial(true) // Aksi khusus
+      action: () => setShowWiFiTutorial(true)
     },
     { 
       name: 'News', 
       url: '#', 
-      icon: '📰', 
+      icon: newslogo, 
       description: 'Berita & Pengumuman',
+      isImage: true,
       action: () => setShowNews(true) 
     },
     { 
@@ -100,7 +117,6 @@ function Dashboard() {
     }
   ];
   
-  // --- PERUBAHAN 1: Handler klik yang lebih cerdas ---
   const handleCardClick = (app) => {
     if (app.action) {
       app.action();
@@ -108,7 +124,6 @@ function Dashboard() {
       window.open(app.url, '_blank');
     }
   };
-
 
   return (
     <div className="dashboard-wrapper">
@@ -155,9 +170,10 @@ function Dashboard() {
         </div>
       )}
 
-      {/* Modal Tutorial WiFi */}
+      {/* Modal Components */}
       {showWiFiTutorial && <WiFiTutorial />}
       {showNews && <News />}
+      {showUdemy && <Udemy />}
 
       {/* Main Content */}
       <main className="dashboard-main">
@@ -171,7 +187,6 @@ function Dashboard() {
           {/* Applications Grid */}
           <div className="applications-grid">
             {applications.map((app) => (
-              // --- PERUBAHAN 2: Menggunakan handler baru di sini ---
               <div key={app.name} className="app-card-new" onClick={() => handleCardClick(app)}>
                 <div className="app-icon-container">
                   {app.isImage ? (
