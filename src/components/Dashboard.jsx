@@ -4,6 +4,7 @@ import moodleLogo from '../assets/moodle-logo.png';
 import nextcloudLogo from '../assets/nextcloud-logo.png';
 import udemylogo from '../assets/udemy-logo.png';
 import n8nlogo from '../assets/n8n-logo.png';
+import newslogo from '../assets/news-logo.png';
 import openprojectlogo from '../assets/openproject-logo.png';
 import cartlogo from '../assets/cart-logo.png';
 import { useAuth } from '../contexts/AuthContext';
@@ -115,7 +116,8 @@ function Dashboard() {
     { 
       name: 'News', 
       url: '#', 
-      icon: '📰', 
+      icon: newslogo,
+      isImage: true, 
       description: 'Berita & Pengumuman',
       action: () => setShowNews(true) 
     },
