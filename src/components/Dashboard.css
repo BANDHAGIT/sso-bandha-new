@@ -1,437 +1,149 @@
-/* Styling Dasar */
-.dashboard-container {
-    padding: 2rem;
-    background-color: #f4f7f6;
-    min-height: 100vh;
-  }
-  
-  /* Header */
-  .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  
-  .header-logo {
-    height: 60px;
-  }
-  
-  .header-text h1 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: #333;
-  }
-  
-  .header-text p {
-    margin: 0;
-    color: #666;
-  }
-  
-  .header-right {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .profile-button, .logout-button {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .profile-button {
-    background-color: #e9ecef;
-    color: #495057;
-  }
-  
-  .profile-button:hover {
-    background-color: #dee2e6;
-  }
-  
-  .logout-button {
-    background-color: #d9534f;
-    color: white;
-  }
-  
-  .logout-button:hover {
-    background-color: #c9302c;
-  }
-  
-  .logout-button:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
-  
-  
-  /* Grid Aplikasi */
-  .apps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .app-card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  }
-  
-  .app-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-  
-  .app-icon {
-    margin-bottom: 1rem;
-    height: 64px; /* Memberi tinggi tetap agar sejajar */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .app-icon-emoji {
-    font-size: 3.5rem;
-  }
-  
-  .app-icon-image {
-    max-width: 100%;
-    height: 64px;
-    object-fit: contain;
-  }
-  
-  .app-card h3 {
-    margin: 0.5rem 0;
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  .app-card p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #777;
-  }
-  
-  
-  /* STYLING MODAL (KUNCI PERBAIKAN) */
-  
-  /* Lapisan Latar Belakang (Overlay) */
-  .profile-modal-overlay, .wifi-tutorial-overlay {
-    position: fixed; /* Menempel di viewport */
-    top: 0;
-    left: 0;
-    width: 100vw;   /* Lebar penuh */
-    height: 100vh;  /* Tinggi penuh */
-    background-color: rgba(0, 0, 0, 0.6); /* Latar belakang gelap transparan */
-    display: flex; /* Menggunakan flexbox untuk memusatkan */
-    justify-content: center; /* Memusatkan horizontal */
-    align-items: center;   /* Memusatkan vertikal */
-    z-index: 1000;
-  }
-  
-  /* Kotak Modal */
-  .profile-modal, .wifi-tutorial-modal {
-    background-color: white;
-    padding: 1.5rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px; /* Lebar maksimum */
-  }
-  
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .modal-header h3 {
-    margin: 0;
-    font-size:2rem;
-    color: #333;
-  }
-  
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #aaa;
-    padding: 0;
-    line-height: 1;
-  }
-  
-  .close-button:hover {
-    color: #333;
-  }
-  
- /* --- KODE PERBAIKAN UNTUK MODAL WIFI --- */
+/* ======================================== */
+/* == STYLING SEMUA MODAL (TERKONSOLIDASI) == */
+/* ======================================== */
 
-/* Memberi jarak antara judul "Langkah-langkah" dengan daftarnya */
-.wifi-tutorial-modal .modal-content h4 {
-    margin-bottom: 1rem; /* Tambahkan jarak bawah */
-    font-size: 1.2rem;   /* Sedikit perbesar judulnya */
-  }
-  
-  /* Mengatur daftar berurutan (ordered list) di dalam modal */
-  .wifi-tutorial-modal .modal-content ol {
-    padding-left: 30px; /* KUNCI: Tambah jarak dari tepi kiri, 30px adalah awal yang baik */
-    list-style-position: outside; /* Memastikan nomor berada di luar blok teks, agar rapi */
-    margin: 0; /* Menghilangkan margin default jika ada */
-  }
-  
-  /* Mengatur setiap item di dalam daftar */
-  .wifi-tutorial-modal .modal-content li {
-    margin-bottom: 0.75rem; /* Memberi jarak antar item daftar */
-    font-size: 1.1rem;      /* Sedikit perbesar teks instruksi agar mudah dibaca */
-    line-height: 1.6;       /* Menambah spasi antar baris jika teksnya panjang */
-  }
-  
-  /* Opsional: pastikan item terakhir tidak punya margin bawah */
-  .wifi-tutorial-modal .modal-content li:last-child {
-    margin-bottom: 0;
-  }
-
-  .profile-modal-overlay, .news-tutorial-overlay {
-    position: fixed; /* Menempel di viewport */
-    top: 0;
-    left: 0;
-    width: 100vw;   /* Lebar penuh */
-    height: 100vh;  /* Tinggi penuh */
-    background-color: rgba(0, 0, 0, 0.6); /* Latar belakang gelap transparan */
-    display: flex; /* Menggunakan flexbox untuk memusatkan */
-    justify-content: center; /* Memusatkan horizontal */
-    align-items: center;   /* Memusatkan vertikal */
-    z-index: 1000;
-  }
-  
-  /* Kotak Modal */
-  .profile-modal, .news-tutorial-modal {
-    background-color: white;
-    padding: 1.5rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px; /* Lebar maksimum */
-  }
-
-  .news-tutorial-modal .modal-content h4 {
-    margin-bottom: 1rem; /* Tambahkan jarak bawah */
-    font-size: 1.2rem;   /* Sedikit perbesar judulnya */
-  }
-  
-  /* Mengatur daftar berurutan (ordered list) di dalam modal */
-  .news-tutorial-modal .modal-content ol {
-    padding-left: 30px; /* KUNCI: Tambah jarak dari tepi kiri, 30px adalah awal yang baik */
-    list-style-position: outside; /* Memastikan nomor berada di luar blok teks, agar rapi */
-    margin: 0; /* Menghilangkan margin default jika ada */
-  }
-  
-  /* Mengatur setiap item di dalam daftar */
-  .news-tutorial-modal .modal-content li {
-    margin-bottom: 0.75rem; /* Memberi jarak antar item daftar */
-    font-size: 1.1rem;      /* Sedikit perbesar teks instruksi agar mudah dibaca */
-    line-height: 1.6;       /* Menambah spasi antar baris jika teksnya panjang */
-  }
-  
-  /* Opsional: pastikan item terakhir tidak punya margin bawah */
-  .news-tutorial-modal .modal-content li:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Media query untuk tampilan mobile */
-@media (max-width: 768px) {
-  .dashboard-header-new {
-    padding: 0.5rem 0;
-  }
-  
-  .header-container {
-    padding: 0 1rem;
-    gap: 0.5rem;
-  }
-  
-  .header-left {
-    flex: 1;
-    min-width: 0; /* Allows flex items to shrink below their minimum content size */
-  }
-  
-  .header-logo-new {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-  }
-  
-  .header-brand h1 {
-    font-size: 1.2rem;
-    margin: 0;
-    white-space: nowrap;
-  }
-  
-  .header-brand span {
-    font-size: 0.7rem;
-    white-space: nowrap;
-  }
-  
-  .header-right {
-    flex-shrink: 0;
-  }
-  
-  /* Menyembunyikan nama user dan dropdown arrow di mobile */
-  .user-menu .user-name,
-  .user-menu .dropdown-arrow {
-    display: none;
-  }
-  
-  /* Memastikan avatar tetap terlihat dengan ukuran yang tepat */
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    margin: 0;
-  }
-  
-  /* Welcome section responsive */
-  .welcome-section {
-    padding: 1.5rem 1rem;
-    text-align: center;
-  }
-  
-  .welcome-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-  }
-  
-  .welcome-section p {
-    font-size: 0.9rem;
-    margin: 0;
-    opacity: 0.8;
-  }
-  
-  /* Menyesuaikan grid aplikasi untuk mobile */
-  .applications-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    padding: 0 1rem 2rem 1rem;
-  }
-  
-  .app-card-new {
-    padding: 1.5rem 1rem;
-  }
-  
-  .app-icon-container {
-    margin-bottom: 1rem;
-  }
-  
-  .app-icon-img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .app-icon-emoji {
-    font-size: 2rem;
-  }
-  
-  .app-name {
-    font-size: 0.9rem;
-    margin-bottom: 0.25rem;
-  }
-  
-  .app-description {
-    font-size: 0.8rem;
-    line-height: 1.3;
-  }
-  
-  /* Dashboard main content */
-  .dashboard-main {
-    padding-top: 0;
-  }
-  
-  .dashboard-content {
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-  }
+/* Lapisan Latar Belakang (Overlay) untuk semua modal */
+.profile-modal-overlay, 
+.wifi-tutorial-overlay, 
+.news-tutorial-overlay,
+.track-tutorial-overlay { /* <-- DITAMBAHKAN */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem; /* Menambahkan padding untuk layar kecil */
 }
 
-/* Media query untuk layar sangat kecil */
-@media (max-width: 480px) {
-  .header-container {
-    padding: 0 0.75rem;
-  }
-  
-  .header-logo-new {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-  }
-  
-  .header-brand h1 {
-    font-size: 1rem;
-  }
-  
-  .header-brand span {
-    font-size: 0.65rem;
-  }
-  
-  .user-avatar {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-  }
-  
-  .welcome-section {
-    padding: 1rem 0.75rem;
-  }
-  
-  .welcome-section h2 {
-    font-size: 1.3rem;
-  }
-  
-  .welcome-section p {
-    font-size: 0.85rem;
-  }
-  
-  .applications-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    padding: 0 0.75rem 1.5rem 0.75rem;
-  }
-  
-  .app-card-new {
-    padding: 1.25rem 1rem;
-  }
+/* Kotak Modal untuk semua modal */
+.profile-modal, 
+.wifi-tutorial-modal, 
+.news-tutorial-modal,
+.track-tutorial-modal { /* <-- DITAMBAHKAN */
+  background-color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  animation: modal-fade-in 0.3s ease-out; /* Animasi muncul */
 }
 
-/* Media query untuk landscape mode di mobile */
-@media (max-width: 768px) and (orientation: landscape) {
-  .applications-grid {
-    grid-template-columns: repeat(3, 1fr);
+/* Header di dalam Modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem; /* Ukuran font disesuaikan */
+  color: #333;
+}
+
+/* Tombol Close (X) di dalam Modal */
+.close-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #aaa;
+  padding: 0;
+  line-height: 1;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+/* Konten di dalam Modal */
+.modal-content h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.modal-content ol {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.modal-content li {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+/* ======================================== */
+/* ==   STYLING FORM KHUSUS TRACKING     == */
+/* ======================================== */
+
+.track-request-form {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Jarak antar elemen form */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.send-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-end; /* Posisi tombol di kanan */
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+}
+
+/* Animasi sederhana untuk modal */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  .welcome-section {
-    padding: 1rem;
-  }
-  
-  .welcome-section h2 {
-    font-size: 1.3rem;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

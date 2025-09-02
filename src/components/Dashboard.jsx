@@ -16,7 +16,8 @@ function Dashboard() {
   const [showWiFiTutorial, setShowWiFiTutorial] = useState(false);
   const [showNews, setShowNews] = useState(false);
   const [showUdemy, setShowUdemy] = useState(false);
-  const [setShowTracking, setShowCart] = useState(false);
+  const [showTracking, setShowTracking] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   // Komponen Modal untuk Tutorial WiFi
   const WiFiTutorial = () => (
@@ -36,22 +37,115 @@ function Dashboard() {
     </div>
   );
 
-  const Tracking = () => (
-    <div className="track-tutorial-overlay" onClick={() => setShowTracking(false)}>
-      <div className="track-tutorial-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>Panduan Koneksi WiFi</h3>
-          <button className="close-button" onClick={() => setShowTracking(false)}>×</button>
-        </div>
-        <div className="modal-content">
-          <h4>Langkah-langkah koneksi:</h4>
-          <ol>
-            <li>Hubungi Athaya Divisi Electric</li>
-          </ol>
+  const Tracking = () => {
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzuu_zEgzEKPFJZFJqjZsUOD85_hOwJydcEW8MXyuEJVU18dvI4zFBth2jpoWveHpmNeA/exec";
+
+    // State untuk menyimpan semua data dari input form
+    const [formData, setFormData] = useState({
+      nama: '',
+      divisi: '',
+      namaBarang: '',
+      linkBarang: '',
+      jumlahBarang: '',
+      hargaTotal: ''
+    });
+
+    // State untuk menampilkan status pengiriman (untuk feedback ke user)
+    const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting', 'success', 'error'
+
+    // Fungsi ini dijalankan setiap kali ada perubahan di salah satu input
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: value
+      }));
+    };
+
+    // Fungsi ini dijalankan saat tombol "Send" ditekan
+    const handleSubmit = (e) => {
+      e.preventDefault(); // Mencegah form me-refresh halaman
+      setSubmissionStatus('submitting'); // Tandai sebagai "sedang mengirim"
+
+      const dataToSubmit = new FormData();
+      Object.keys(formData).forEach(key => {
+        dataToSubmit.append(key, formData[key]);
+      });
+
+      // Mengirim data ke URL Google Apps Script
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: dataToSubmit,
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result === 'success') {
+          setSubmissionStatus('success');
+          // Kosongkan form setelah berhasil
+          setFormData({
+            nama: '', divisi: '', namaBarang: '', linkBarang: '',
+            jumlahBarang: '', hargaTotal: ''
+          });
+        } else {
+          // Jika script mengembalikan error
+          throw new Error(data.error?.message || 'Unknown error from script');
+        }
+      })
+      .catch((error) => {
+        console.error('Error submitting form:', error);
+        setSubmissionStatus('error');
+      });
+    };
+
+    return (
+      <div className="track-tutorial-overlay" onClick={() => setShowTracking(false)}>
+        <div className="track-tutorial-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h3>Order Tracking</h3>
+            <button className="close-button" onClick={() => setShowTracking(false)}>×</button>
+          </div>
+          <div className="modal-content">
+            <h4>Tambahkan Request Barang</h4>
+            <p>Silakan isi detail di bawah ini.</p>
+            
+            {submissionStatus === 'success' && <p style={{ color: 'green', fontWeight: 'bold' }}>✅ Data berhasil terkirim!</p>}
+            {submissionStatus === 'error' && <p style={{ color: 'red', fontWeight: 'bold' }}>❌ Terjadi kesalahan. Gagal mengirim data.</p>}
+            
+            <form className="track-request-form" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="nama">Nama</label>
+                <input type="text" id="nama" name="nama" value={formData.nama} onChange={handleChange} placeholder="Masukkan nama Anda" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="divisi">Divisi</label>
+                <input type="text" id="divisi" name="divisi" value={formData.divisi} onChange={handleChange} placeholder="Contoh: Electric, Program" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="namaBarang">Nama Barang</label>
+                <input type="text" id="namaBarang" name="namaBarang" value={formData.namaBarang} onChange={handleChange} placeholder="Contoh: BLDC" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="linkBarang">Link Barang</label>
+                <input type="url" id="linkBarang" name="linkBarang" value={formData.linkBarang} onChange={handleChange} placeholder="Contoh: https://..." required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="jumlahBarang">Jumlah Barang</label>
+                <input type="number" id="jumlahBarang" name="jumlahBarang" value={formData.jumlahBarang} onChange={handleChange} placeholder="Contoh: 1" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="hargaTotal">Harga Total</label>
+                <input type="number" id="hargaTotal" name="hargaTotal" value={formData.hargaTotal} onChange={handleChange} placeholder="Contoh: 100000" required />
+              </div>
+              <button type="submit" className="send-button" disabled={submissionStatus === 'submitting'}>
+                {submissionStatus === 'submitting' ? 'Mengirim...' : 'Send'}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
+  // --- KODE BARU BERAKHIR DI SINI ---
 
   const News = () => (
     <div className="news-tutorial-overlay" onClick={() => setShowNews(false)}>
@@ -81,71 +175,17 @@ function Dashboard() {
     </div>
   );
 
-  const [showProfile, setShowProfile] = useState(false);
-
   const applications = [
-    { 
-      name: 'Drive', 
-      url: 'https://drive.bandhayudha.icu', 
-      icon: nextcloudLogo, 
-      description: 'File Storage & Sharing',
-      isImage: true
-    },
-    { 
-      name: 'BandhaLab', 
-      url: 'https://lab.bandhayudha.com', 
-      icon: moodleLogo, 
-      description: 'Virtual Laboratory',
-      isImage: true
-    },
-    { 
-      name: 'Udemy', 
-      url: '#', 
-      icon: udemylogo, 
-      description: 'Online Learning Platform',
-      isImage: true,
-      action: () => setShowUdemy(true) // Aksi khusus
-    },
-    { 
-      name: 'WiFi Guide', 
-      url: '#', // url bisa tetap ada atau dihapus
-      icon: '📶', 
-      description: 'Panduan Koneksi WiFi',
-      action: () => setShowWiFiTutorial(true) // Aksi khusus
-    },
-    { 
-      name: 'News', 
-      url: '#', 
-      icon: newslogo,
-      isImage: true, 
-      description: 'Berita & Pengumuman',
-      action: () => setShowNews(true) 
-    },
-    { 
-      name: 'N8N', 
-      url: 'https://n8n.bandhayudha.com', 
-      icon: n8nlogo, 
-      description: 'Workflow Automation',
-      isImage: true
-    },
-    { 
-      name: 'Task Management', 
-      url: 'https://task.bandhayudha.com', 
-      icon: openprojectlogo, 
-      description: 'Project & Task Manager',
-      isImage: true
-    },
-    {
-      name: 'Order Tracking',
-      url: '#',
-      icon: cartlogo,
-      description: 'Package Tracking',
-      isImage: true,
-      action: () => setShowTracking(true)
-    }
+    { name: 'Drive', url: 'https://drive.bandhayudha.icu', icon: nextcloudLogo, description: 'File Storage & Sharing', isImage: true },
+    { name: 'BandhaLab', url: 'https://lab.bandhayudha.com', icon: moodleLogo, description: 'Virtual Laboratory', isImage: true },
+    { name: 'Udemy', url: '#', icon: udemylogo, description: 'Online Learning Platform', isImage: true, action: () => setShowUdemy(true) },
+    { name: 'WiFi Guide', url: '#', icon: '📶', description: 'Panduan Koneksi WiFi', action: () => setShowWiFiTutorial(true) },
+    { name: 'News', url: '#', icon: newslogo, isImage: true, description: 'Berita & Pengumuman', action: () => setShowNews(true) },
+    { name: 'N8N', url: 'https://n8n.bandhayudha.com', icon: n8nlogo, description: 'Workflow Automation', isImage: true },
+    { name: 'Task Management', url: 'https://task.bandhayudha.com', icon: openprojectlogo, description: 'Project & Task Manager', isImage: true },
+    { name: 'Order Tracking', url: '#', icon: cartlogo, description: 'Package Tracking', isImage: true, action: () => setShowTracking(true) }
   ];
   
-  // --- PERUBAHAN 1: Handler klik yang lebih cerdas ---
   const handleCardClick = (app) => {
     if (app.action) {
       app.action();
@@ -154,10 +194,8 @@ function Dashboard() {
     }
   };
 
-
   return (
     <div className="dashboard-wrapper">
-      {/* Header */}
       <header className="dashboard-header-new">
         <div className="header-container">
           <div className="header-left">
@@ -179,7 +217,6 @@ function Dashboard() {
         </div>
       </header>
 
-      {/* Profile Dropdown */}
       {showProfile && (
         <div className="profile-dropdown-overlay" onClick={() => setShowProfile(false)}>
           <div className="profile-dropdown" onClick={(e) => e.stopPropagation()}>
@@ -200,24 +237,20 @@ function Dashboard() {
         </div>
       )}
 
-      {/* Modal Tutorial WiFi */}
       {showWiFiTutorial && <WiFiTutorial />}
       {showNews && <News />}
       {showUdemy && <Udemy />}
+      {showTracking && <Tracking />}
 
-      {/* Main Content */}
       <main className="dashboard-main">
         <div className="dashboard-content">
-          {/* Welcome Section */}
           <div className="welcome-section">
             <h2>Welcome to your Bandhayudha dashboard</h2>
             <p>Please select your required application to login</p>
           </div>
 
-          {/* Applications Grid */}
           <div className="applications-grid">
             {applications.map((app) => (
-              // --- PERUBAHAN 2: Menggunakan handler baru di sini ---
               <div key={app.name} className="app-card-new" onClick={() => handleCardClick(app)}>
                 <div className="app-icon-container">
                   {app.isImage ? (
