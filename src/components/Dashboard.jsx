@@ -5,6 +5,7 @@ import nextcloudLogo from '../assets/nextcloud-logo.png';
 import udemylogo from '../assets/udemy-logo.png';
 import n8nlogo from '../assets/n8n-logo.png';
 import openprojectlogo from '../assets/openproject-logo.png';
+import cartlogo from '../assets/cart-logo.png';
 import { useAuth } from '../contexts/AuthContext';
 import './Dashboard.css';
 
@@ -113,6 +114,14 @@ function Dashboard() {
       icon: openprojectlogo, 
       description: 'Project & Task Manager',
       isImage: true
+    },
+    {
+      name: 'Order Tracking',
+      url: '#',
+      icon: cartlogo,
+      description: 'Package Tracking',
+      isImage: true,
+      action: () => setShowTracking(true)
     }
   ];
   
