@@ -15,6 +15,7 @@ function Dashboard() {
   const [showWiFiTutorial, setShowWiFiTutorial] = useState(false);
   const [showNews, setShowNews] = useState(false);
   const [showUdemy, setShowUdemy] = useState(false);
+  const [setShowTracking, setShowCart] = useState(false);
 
   // Komponen Modal untuk Tutorial WiFi
   const WiFiTutorial = () => (
@@ -23,6 +24,23 @@ function Dashboard() {
         <div className="modal-header">
           <h3>Panduan Koneksi WiFi</h3>
           <button className="close-button" onClick={() => setShowWiFiTutorial(false)}>×</button>
+        </div>
+        <div className="modal-content">
+          <h4>Langkah-langkah koneksi:</h4>
+          <ol>
+            <li>Hubungi Athaya Divisi Electric</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  );
+
+  const Tracking = () => (
+    <div className="track-tutorial-overlay" onClick={() => setShowTracking(false)}>
+      <div className="track-tutorial-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>Panduan Koneksi WiFi</h3>
+          <button className="close-button" onClick={() => setShowTracking(false)}>×</button>
         </div>
         <div className="modal-content">
           <h4>Langkah-langkah koneksi:</h4>
