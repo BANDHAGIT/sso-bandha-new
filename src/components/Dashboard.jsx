@@ -53,13 +53,34 @@ function Dashboard() {
     // State untuk menampilkan status pengiriman (untuk feedback ke user)
     const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting', 'success', 'error'
 
+    // Fungsi untuk format angka dengan separator ribuan
+    const formatNumber = (num) => {
+      if (!num) return '';
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
+    // Fungsi untuk menghilangkan format (untuk menyimpan nilai asli)
+    const unformatNumber = (formattedNum) => {
+      return formattedNum.replace(/\./g, '');
+    };
+
     // Fungsi ini dijalankan setiap kali ada perubahan di salah satu input
     const handleChange = (e) => {
       const { name, value } = e.target;
-      setFormData(prevData => ({
-        ...prevData,
-        [name]: value
-      }));
+      
+      if (name === 'hargaTotal') {
+        // Hapus semua karakter non-digit
+        const numericValue = value.replace(/\D/g, '');
+        setFormData(prevData => ({
+          ...prevData,
+          [name]: numericValue
+        }));
+      } else {
+        setFormData(prevData => ({
+          ...prevData,
+          [name]: value
+        }));
+      }
     };
 
     // Fungsi ini dijalankan saat tombol "Send" ditekan
@@ -118,11 +139,11 @@ function Dashboard() {
               </div>
               <div className="form-group">
                 <label htmlFor="divisi">Divisi</label>
-                <input type="text" id="divisi" name="divisi" value={formData.divisi} onChange={handleChange} placeholder="Contoh: Electric, Program" required />
+                <input type="text" id="divisi" name="divisi" value={formData.divisi} onChange={handleChange} placeholder="Contoh: Electric, Program, Mekanik" required />
               </div>
               <div className="form-group">
                 <label htmlFor="namaBarang">Nama Barang</label>
-                <input type="text" id="namaBarang" name="namaBarang" value={formData.namaBarang} onChange={handleChange} placeholder="Contoh: BLDC" required />
+                <input type="text" id="namaBarang" name="namaBarang" value={formData.namaBarang} onChange={handleChange} placeholder="Contoh: PCB, LiDAR, Roti Bakar" required />
               </div>
               <div className="form-group">
                 <label htmlFor="linkBarang">Link Barang</label>
@@ -134,7 +155,7 @@ function Dashboard() {
               </div>
               <div className="form-group">
                 <label htmlFor="hargaTotal">Harga Total</label>
-                <input type="number" id="hargaTotal" name="hargaTotal" value={formData.hargaTotal} onChange={handleChange} placeholder="Contoh: 100000" required />
+                <input type="text" id="hargaTotal" name="hargaTotal" value={formatNumber(formData.hargaTotal)} onChange={handleChange} placeholder="Contoh: 1.000.000" required />
               </div>
               <button type="submit" className="send-button" disabled={submissionStatus === 'submitting'}>
                 {submissionStatus === 'submitting' ? 'Mengirim...' : 'Send'}
