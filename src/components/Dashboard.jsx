@@ -13,6 +13,7 @@ function Dashboard() {
 
   const [showWiFiTutorial, setShowWiFiTutorial] = useState(false);
   const [showNews, setShowNews] = useState(false);
+  const [showUdemy, setShowUdemy] = useState(false);
 
   // Komponen Modal untuk Tutorial WiFi
   const WiFiTutorial = () => (
@@ -33,11 +34,25 @@ function Dashboard() {
   );
 
   const News = () => (
-    <div className="news-tutorial-overlay" onClick={() => setShowWiFiTutorial(false)}>
+    <div className="news-tutorial-overlay" onClick={() => setShowNews(false)}>
       <div className="news-tutorial-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>News</h3>
           <button className="close-button" onClick={() => setShowNews(false)}>×</button>
+        </div>
+        <div className="modal-content">
+          <h4>Under Maintenance</h4>
+        </div>
+      </div>
+    </div>
+  );
+
+  const Udemy = () => (
+    <div className="news-tutorial-overlay" onClick={() => setShowUdemy(false)}>
+      <div className="news-tutorial-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>Udemy</h3>
+          <button className="close-button" onClick={() => setShowUdemy(false)}>×</button>
         </div>
         <div className="modal-content">
           <h4>Under Maintenance</h4>
@@ -65,10 +80,11 @@ function Dashboard() {
     },
     { 
       name: 'Udemy', 
-      url: 'https://udemy.bandhayudha.com', 
+      url: '#', 
       icon: udemylogo, 
       description: 'Online Learning Platform',
-      isImage: true
+      isImage: true,
+      action: () => setShowUdemy(true) // Aksi khusus
     },
     { 
       name: 'WiFi Guide', 
@@ -158,6 +174,7 @@ function Dashboard() {
       {/* Modal Tutorial WiFi */}
       {showWiFiTutorial && <WiFiTutorial />}
       {showNews && <News />}
+      {showUdemy && <Udemy />}
 
       {/* Main Content */}
       <main className="dashboard-main">

@@ -256,3 +256,182 @@
   .news-tutorial-modal .modal-content li:last-child {
     margin-bottom: 0;
   }
+
+  /* Media query untuk tampilan mobile */
+@media (max-width: 768px) {
+  .dashboard-header-new {
+    padding: 0.5rem 0;
+  }
+  
+  .header-container {
+    padding: 0 1rem;
+    gap: 0.5rem;
+  }
+  
+  .header-left {
+    flex: 1;
+    min-width: 0; /* Allows flex items to shrink below their minimum content size */
+  }
+  
+  .header-logo-new {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+  
+  .header-brand h1 {
+    font-size: 1.2rem;
+    margin: 0;
+    white-space: nowrap;
+  }
+  
+  .header-brand span {
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+  
+  .header-right {
+    flex-shrink: 0;
+  }
+  
+  /* Menyembunyikan nama user dan dropdown arrow di mobile */
+  .user-menu .user-name,
+  .user-menu .dropdown-arrow {
+    display: none;
+  }
+  
+  /* Memastikan avatar tetap terlihat dengan ukuran yang tepat */
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    margin: 0;
+  }
+  
+  /* Welcome section responsive */
+  .welcome-section {
+    padding: 1.5rem 1rem;
+    text-align: center;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+  
+  .welcome-section p {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+  }
+  
+  /* Menyesuaikan grid aplikasi untuk mobile */
+  .applications-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 1rem 2rem 1rem;
+  }
+  
+  .app-card-new {
+    padding: 1.5rem 1rem;
+  }
+  
+  .app-icon-container {
+    margin-bottom: 1rem;
+  }
+  
+  .app-icon-img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .app-icon-emoji {
+    font-size: 2rem;
+  }
+  
+  .app-name {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .app-description {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+  
+  /* Dashboard main content */
+  .dashboard-main {
+    padding-top: 0;
+  }
+  
+  .dashboard-content {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Media query untuk layar sangat kecil */
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0 0.75rem;
+  }
+  
+  .header-logo-new {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+  
+  .header-brand h1 {
+    font-size: 1rem;
+  }
+  
+  .header-brand span {
+    font-size: 0.65rem;
+  }
+  
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+  
+  .welcome-section {
+    padding: 1rem 0.75rem;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.3rem;
+  }
+  
+  .welcome-section p {
+    font-size: 0.85rem;
+  }
+  
+  .applications-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0 0.75rem 1.5rem 0.75rem;
+  }
+  
+  .app-card-new {
+    padding: 1.25rem 1rem;
+  }
+}
+
+/* Media query untuk landscape mode di mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .applications-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .welcome-section {
+    padding: 1rem;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.3rem;
+  }
+}
