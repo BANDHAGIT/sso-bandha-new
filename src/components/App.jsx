@@ -6,6 +6,7 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import AuthCallback from './AuthCallback'; // Tambahkan impor ini
 import SilentRenew from './SilentRenew';   // Tambahkan impor ini
+import OrderTracking from './OrderTracking';
 
 // Konteks dan Rute Pelindung
 import { AppAuthProvider } from '../contexts/AuthContext';
@@ -32,6 +33,14 @@ function App() {
                 <Dashboard />
               </ProtectedRoute>
             }
+          />
+          <Route 
+            path="/order-tracking" 
+            element={
+              <ProtectedRoute>
+                <OrderTracking />
+              </ProtectedRoute>
+            } 
           />
           
           {/* Logika pengalihan */}
