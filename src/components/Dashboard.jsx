@@ -48,21 +48,93 @@ const News = ({ onClose }) => (
   </div>
 );
 
-const Udemy = ({ onClose }) => (
-  <div className="news-tutorial-overlay" onClick={onClose}>
-    <div className="news-tutorial-modal" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-header">
-        <h3>Udemy</h3>
-        <button className="close-button" onClick={onClose}>×</button>
-      </div>
-      <div className="modal-content">
-        <h4>Silakan Gunakan akun berikut:</h4>
-        <ol><h5>Email : bandhayudha@gmail.com</h5>
-        <h5>Password : bandhayudha123</h5></ol>
+const Udemy = ({ onClose }) => {
+  const [emailCopied, setEmailCopied] = useState(false);
+  const [passwordCopied, setPasswordCopied] = useState(false);
+
+  const email = 'bandhayudha@gmail.com';
+  const password = 'bandhayudha123';
+
+  const copyToClipboard = (text, type) => {
+    navigator.clipboard.writeText(text).then(() => {
+      if (type === 'email') {
+        setEmailCopied(true);
+        setPasswordCopied(false);
+        setTimeout(() => setEmailCopied(false), 2000);
+      } else if (type === 'password') {
+        setPasswordCopied(true);
+        setEmailCopied(false);
+        setTimeout(() => setPasswordCopied(false), 2000);
+      }
+    });
+  };
+
+  const itemStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '10px',
+  };
+
+  const textStyle = {
+    margin: 0,
+    fontFamily: 'sans-serif', // Font lebih modern
+    color: '#333',
+  };
+
+  // --- STYLE TOMBOL DIPERBARUI DI SINI ---
+  const getButtonStyle = (isCopied) => ({
+    marginLeft: '15px',
+    padding: '8px 12px',
+    cursor: 'pointer',
+    border: 'none',
+    borderRadius: '6px',
+    color: 'white',
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s ease, transform 0.1s ease',
+    // Ganti warna jika sudah tercopy
+    backgroundColor: isCopied ? '#28a745' : '#007bff', 
+  });
+  
+  // Style untuk efek hover bisa ditambahkan di file CSS Anda
+  /*
+    
+  */
+
+  return (
+    <div className="news-tutorial-overlay" onClick={onClose}>
+      <div className="news-tutorial-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>Udemy</h3>
+          <button className="close-button" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-content">
+          <h4>Silakan gunakan akun berikut:</h4>
+          <div style={itemStyle}>
+            <h5 style={textStyle}>Email : {email}</h5>
+            <button 
+              className="copy-button" // Tambahkan className untuk efek hover/active di CSS
+              style={getButtonStyle(emailCopied)} 
+              onClick={() => copyToClipboard(email, 'email')}
+            >
+              {emailCopied ? 'Tersalin!' : 'Copy'}
+            </button>
+          </div>
+          <div style={itemStyle}>
+            <h5 style={textStyle}>Password : {password}</h5>
+            <button
+              className="copy-button"
+              style={getButtonStyle(passwordCopied)} 
+              onClick={() => copyToClipboard(password, 'password')}
+            >
+              {passwordCopied ? 'Tersalin!' : 'Copy'}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 
 // --- KOMPONEN UTAMA DASHBOARD ---
@@ -152,7 +224,6 @@ function Dashboard() {
               <div className="profile-details">
                 <h4>{user?.profile.name || 'N/A'}</h4>
                 <p>{user?.profile.email || 'N/A'}</p>
-                <p>Groups: {user?.profile.groups?.join(', ') || 'N/A'}</p>
               </div>
             </div>
             <hr />
