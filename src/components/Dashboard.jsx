@@ -78,11 +78,10 @@ const Udemy = ({ onClose }) => {
 
   const textStyle = {
     margin: 0,
-    fontFamily: 'sans-serif', // Font lebih modern
+    fontFamily: 'sans-serif', 
     color: '#333',
   };
 
-  // --- STYLE TOMBOL DIPERBARUI DI SINI ---
   const getButtonStyle = (isCopied) => ({
     marginLeft: '15px',
     padding: '8px 12px',
@@ -92,14 +91,9 @@ const Udemy = ({ onClose }) => {
     color: 'white',
     fontWeight: 'bold',
     transition: 'background-color 0.3s ease, transform 0.1s ease',
-    // Ganti warna jika sudah tercopy
     backgroundColor: isCopied ? '#28a745' : '#007bff', 
   });
-  
-  // Style untuk efek hover bisa ditambahkan di file CSS Anda
-  /*
-    
-  */
+
 
   return (
     <div className="news-tutorial-overlay" onClick={onClose}>
@@ -113,7 +107,7 @@ const Udemy = ({ onClose }) => {
           <div style={itemStyle}>
             <h5 style={textStyle}>Email : {email}</h5>
             <button 
-              className="copy-button" // Tambahkan className untuk efek hover/active di CSS
+              className="copy-button" 
               style={getButtonStyle(emailCopied)} 
               onClick={() => copyToClipboard(email, 'email')}
             >
