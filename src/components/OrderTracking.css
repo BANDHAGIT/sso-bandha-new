@@ -484,4 +484,61 @@
     font-size: 12px;
     min-width: 32px;
   }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap; 
+  }
+  
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    color: white;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-align: center;
+    min-width: 80px; 
+    margin-left: 15px; /* Mungkin perlu jarak dari info */
+  }
+  /* Style untuk tombol approve di KANAN BAWAH */
+.approve-button {
+  /* display: block; */ /* Hapus ini agar bisa float */
+  float: right; /* Membuat tombol ke kanan */
+  clear: both; /* Pastikan tidak ada elemen lain di sampingnya */
+  margin-top: 15px; /* Jarak dari detail terakhir di atasnya */
+  padding: 8px 15px; /* Sesuaikan padding agar tidak terlalu besar */
+  background-color: #28a745; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9em; /* Sedikit lebih kecil mungkin? */
+}
+
+.approve-button:hover {
+  background-color: #218838; 
+}
+
+.approve-button:disabled {
+  background-color: #6c757d; 
+  cursor: not-allowed;
+  opacity: 0.7;
+} 
+
+/* PENTING: Tambahkan ini agar container order-details 
+   memperhitungkan tinggi tombol yang di-float */
+.order-details::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* ... Sisa CSS Anda ... */
 }

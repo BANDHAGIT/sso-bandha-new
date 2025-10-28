@@ -172,6 +172,7 @@ const UserSettings = ({ users, onSave, onClose }) => {
                 <th style={thStyle}>Program</th>
                 <th style={thStyle}>Electric</th>
                 <th style={thStyle}>Mechanic</th>
+                <th style={thStyle}>Official</th>
               </tr>
             </thead>
             <tbody>
@@ -210,6 +211,14 @@ const UserSettings = ({ users, onSave, onClose }) => {
                       style={{ cursor: 'pointer' }}
                     />
                   </td>
+                  <td style={tdStyle}>
+                    <input
+                      type="checkbox"
+                      checked={user.isOfficial}
+                      onChange={() => handleRoleChange(user.username, 'isOfficial')}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -241,6 +250,7 @@ const UserSettings = ({ users, onSave, onClose }) => {
 function Dashboard() {
   const { user, logout } = useAuth();
   console.log("User Profile:", user?.profile);
+  console.log('[OIDC] user roles:',user?.profile?.roles || user?.profile?.role || 'no roles');
   const navigate = useNavigate();
   
   // --- State untuk Modal (Tetap Sama) ---
@@ -294,7 +304,8 @@ function Dashboard() {
             isAdmin: userRole.isAdmin,
             isProgram: userRole.isProgram,
             isElectric: userRole.isElectric,
-            isMechanic: userRole.isMechanic
+            isMechanic: userRole.isMechanic,
+            isOfficial: userRole.isOfficial
           };
           
           return setDoc(userDocRef, dataToSave, { merge: true });
@@ -387,6 +398,25 @@ function Dashboard() {
 
   }, [user, userRoles]);
 
+  const isOfficial = useMemo(() => {
+
+    if (!user?.profile?.preferred_username) {
+
+        return false;
+
+    }
+
+    const foundUser = userRoles.find(
+
+      u => u.username === user.profile.preferred_username
+
+    );
+
+    return foundUser ? foundUser.isOfficial : false;
+    
+
+  }, [user, userRoles]);
+
 
   const applications = useMemo(() => {
 
@@ -403,7 +433,7 @@ function Dashboard() {
     ];
 
 
-    if (isAdmin || isProgram || isElectric || isMechanic) { 
+    if (isAdmin || isProgram || isElectric || isMechanic || isOfficial) { 
       if (!baseApps.some(app => app.name === 'Order Tracking')) {
          baseApps.push({ 
            name: 'Order Tracking', 
@@ -430,7 +460,7 @@ function Dashboard() {
     }
 
     return baseApps;
-  }, [isAdmin, isProgram, isElectric, isMechanic, navigate]);
+  }, [isAdmin, isProgram, isElectric, isMechanic, isOfficial, navigate]);
 
   const handleCardClick = (app) => {
     if (app.action) {
@@ -481,7 +511,8 @@ function Dashboard() {
                     isAdmin && 'Admin',
                     isProgram && 'Program',
                     isElectric && 'Electric', 
-                    isMechanic && 'Mechanic'
+                    isMechanic && 'Mechanic',
+                    isOfficial && 'Official'
                   ].filter(Boolean).join(', ') || 'No roles assigned'
                 : 'Loading roles...'}
             </p>
