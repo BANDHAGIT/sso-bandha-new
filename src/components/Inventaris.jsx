@@ -143,9 +143,9 @@ const Inventaris = ({ onClose }) => {
     borderRadius: '4px', 
     border: '1px solid #ccc' 
   };
-  const tableStyle = { width: '100%', borderCollapse: 'collapse', marginTop: '15px', fontSize: '14px' };
-  const thStyle = { background: '#f4f4f4', padding: '10px', border: '1px solid #ddd', textAlign: 'left' };
-  const tdStyle = { padding: '10px', border: '1px solid #ddd', textAlign: 'left' };
+  const tableStyle = {minWidth: '700px', width: '100%', borderCollapse: 'collapse', marginTop: '15px', fontSize: '14px' };
+  const thStyle = { background: '#f4f4f4', padding: '10px', border: '1px solid #ddd', textAlign: 'left', whiteSpace: 'nowrap' };
+  const tdStyle = { padding: '10px', border: '1px solid #ddd', textAlign: 'left', whiteSpace: 'nowrap' };
   const buttonStyle = { 
     padding: '5px 10px', 
     cursor: 'pointer', 
@@ -158,9 +158,9 @@ const Inventaris = ({ onClose }) => {
 
   return (
     // Kita gunakan className yang sama dengan modal lain agar styling-nya konsisten
-    <div className="news-tutorial-overlay" onClick={onClose}>
+    <div className="news-tutorial-overlay" style={{ overflowX: 'auto', overflowY: 'auto' }} onClick={onClose}>
       {/* Buat modal lebih lebar agar tabel muat */}
-      <div className="news-tutorial-modal" style={{ maxWidth: '800px' }} onClick={(e) => e.stopPropagation()}>
+      <div className="news-tutorial-modal" style={{ maxWidth: '90vw', maxHeight: '80vh', margin: '5vh auto  ', top: '5vh', width: 'auto', overflowX: 'auto', boxSizing: 'border-box' }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>Inventaris Barang</h3>
           <button className="close-button" onClick={onClose}>×</button>
@@ -234,7 +234,7 @@ const Inventaris = ({ onClose }) => {
           
           {error && <p style={{ color: 'red' }}>Error: {error}</p>}
           
-          <div style={{ maxHeight: '400px', overflowY: 'auto', marginTop: '10px' }}>
+          <div style={{ width: '100%', maxHeight: '400vx', overflowY: 'auto', overflowX: 'auto', marginTop: '10px' }}>
             <table style={tableStyle}>
               <thead>
                 <tr style={{ background: '#f0f0f0' }}>
