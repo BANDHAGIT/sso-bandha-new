@@ -11,6 +11,7 @@ import n8nlogo from '../assets/n8n-logo.png';
 import newslogo from '../assets/news-logo.png';
 import openprojectlogo from '../assets/openproject-logo.png';
 import cartlogo from '../assets/cart-logo.png';
+import Inventaris from './Inventaris.jsx';
 
 import { db } from '../firebase/firebase.js'; 
 import { collection, getDocs, setDoc, doc } from "firebase/firestore";
@@ -253,14 +254,13 @@ function Dashboard() {
   console.log('[OIDC] user roles:',user?.profile?.roles || user?.profile?.role || 'no roles');
   const navigate = useNavigate();
   
-  // --- State untuk Modal (Tetap Sama) ---
   const [showWiFiTutorial, setShowWiFiTutorial] = useState(false);
   const [showNews, setShowNews] = useState(false);
   const [showUdemy, setShowUdemy] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  
+  const [showInventory, setShowInventory] = useState(false);
  
   const [userRoles, setUserRoles] = useState([]);
   
@@ -429,7 +429,14 @@ function Dashboard() {
       { name: 'News', url: '#', icon: newslogo, isImage: true, description: 'Berita & Pengumuman', isImage: true, action: () => setShowNews(true) },
       { name: 'N8N', url: 'https://n8n.bandhayudha.com', icon: n8nlogo, description: 'Workflow Automation', isImage: true },
       { name: 'Task Management', url: 'https://task.bandhayudha.com', icon: openprojectlogo, description: 'Project & Task Manager', isImage: true },
-
+      { 
+                name: 'Inventaris', 
+                url: '#', 
+                icon: '📦', 
+                description: 'Cek Stok Barang', 
+                isImage: false, 
+                action: () => setShowInventory(true) 
+              },
     ];
 
 
@@ -530,6 +537,7 @@ function Dashboard() {
       {showWiFiTutorial && <WiFiTutorial onClose={() => setShowWiFiTutorial(false)} />}
       {showNews && <News onClose={() => setShowNews(false)} />}
       {showUdemy && <Udemy onClose={() => setShowUdemy(false)} />}
+      {showInventory && <Inventaris onClose={() => setShowInventory(false)} />}
 
 
       {showSettings && (

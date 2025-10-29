@@ -118,7 +118,6 @@ const OrderTracking = () => {
       
       if (data.result === 'success') {
         console.log('Orders received:', data.orders.length);
-        // Pastikan data adalah array sebelum filter
         const ordersArray = Array.isArray(data.orders) ? data.orders : [];
         const validOrders = ordersArray.filter(order => order.nama && order.nama.trim() !== '');
         setOrders(validOrders);
@@ -153,7 +152,6 @@ const OrderTracking = () => {
   }, [userDivision, loadingRoles, isAdmin]);
 
   const getStatusColor = (status) => {
-    // ... (fungsi ini tidak berubah)
     switch (status?.toLowerCase()) {
       case 'process': return '#007bff';
       case 'ordered': return '#28a745';
@@ -164,14 +162,12 @@ const OrderTracking = () => {
   };
 
   const formatPrice = (price) => {
-    // ... (fungsi ini tidak berubah)
     if (!price) return 'N/A';
     const cleanPrice = price.toString().replace(/\./g, '');
     return formatNumber(cleanPrice);
   };
 
   const formatDate = (dateStr) => {
-    // ... (fungsi ini tidak berubah)
     if (!dateStr) return 'N/A';
     try {
       const date = new Date(dateStr);
@@ -186,7 +182,6 @@ const OrderTracking = () => {
   };
 
   const handleChange = (e) => {
-    // ... (fungsi ini tidak berubah)
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
@@ -195,7 +190,6 @@ const OrderTracking = () => {
   };
 
   const handleSubmit = (e) => {
-    // ... (fungsi ini tidak berubah)
     e.preventDefault();
     setSubmissionStatus('submitting');
     const dataToSubmit = new FormData();
@@ -203,7 +197,6 @@ const OrderTracking = () => {
       dataToSubmit.append(key, formData[key]);
     });
     
-    // Tidak perlu 'action' di sini, backend akan handle sebagai default
     console.log("Submitting data:");
     for (var pair of dataToSubmit.entries()) {
         console.log(pair[0]+ ': ' + pair[1]); 
@@ -237,12 +230,9 @@ const OrderTracking = () => {
   };
 
 
-  // --- FUNGSI BARU UNTUK APPROVE ORDER ---
   const handleApproveOrder = async (order) => {
-    // Kita ubah status "Process" menjadi "Ordered" (sesuai alur status Anda)
     const newStatus = 'ordered'; 
     
-    // Gunakan rowNumber + sheetName sebagai ID unik untuk loading
     const uniqueOrderId = `${order.sheetName}-${order.rowNumber}`;
     setUpdatingOrderId(uniqueOrderId);
 
@@ -260,11 +250,10 @@ const OrderTracking = () => {
       const data = await response.json();
       
       if (data.result === 'success') {
-        // Update state lokal secara langsung agar UI responsif
         setOrders(prevOrders =>
           prevOrders.map(o =>
             (o.rowNumber === order.rowNumber && o.sheetName === order.sheetName)
-              ? { ...o, Status: newStatus } // Update status order yang sesuai
+              ? { ...o, Status: newStatus } 
               : o
           )
         );
@@ -275,16 +264,15 @@ const OrderTracking = () => {
       console.error('Error approving order:', error);
       alert(`Gagal meng-approve order: ${error.message}`);
     } finally {
-      setUpdatingOrderId(null); // Selesai loading
+      setUpdatingOrderId(null); 
     }
   };
-  // --- AKHIR FUNGSI BARU ---
+
 
 
   return (
     <div className="dashboard-wrapper">
       <header className="dashboard-header-new">
-        {/* ... (Tidak ada perubahan di header) ... */}
         <div className="header-container">
           <div className="header-left">
             <img src={logo} alt="Bandhayudha Logo" className="header-logo-new" />
@@ -307,7 +295,6 @@ const OrderTracking = () => {
 
       {showProfile && (
       <div className="profile-dropdown-overlay" onClick={() => setShowProfile(false)}>
-        {/* ... (Tidak ada perubahan di dropdown profile) ... */}
         <div className="profile-dropdown" onClick={(e) => e.stopPropagation()}>
           <div className="profile-info">
             <div className="profile-avatar">
@@ -373,13 +360,11 @@ const OrderTracking = () => {
     const uniqueOrderId = `${order.sheetName}-${order.rowNumber}`;
     return (
     <div key={order.sheetName ? uniqueOrderId : index} className="order-item">
-      {/* Header Kembali Normal */}
       <div className="order-header">
         <div className="order-info">
           <strong>Nama:</strong> {order.nama || 'N/A'}<br/>
           <strong>Divisi:</strong> {order.divisi || 'N/A'}
         </div>
-        {/* Status Badge saja di sini */}
         <div
           className="status-badge"
           style={{ backgroundColor: getStatusColor(order.Status || order.status || 'Process') }}
@@ -409,15 +394,14 @@ const OrderTracking = () => {
             </a>
           </div>
         )}
-        {/* === TOMBOL APPROVE KEMBALI KE SINI === */}
         {isAdmin && (order.Status || order.status || 'Process').toLowerCase() === 'process' && (
             <button 
               onClick={() => handleApproveOrder(order)} 
-              className="status-badge" // 1. Ubah className menjadi 'status-badge'
-              style={{ // 2. Tambahkan inline style
-                backgroundColor: updatingOrderId === uniqueOrderId ? '#6c757d' : '#28a745', // 3. Atur warna (hijau saat aktif, abu-abu saat loading)
-                border: 'none', // 4. Hilangkan border default button
-                cursor: updatingOrderId === uniqueOrderId ? 'not-allowed' : 'pointer' // 5. Atur kursor
+              className="status-badge"
+              style={{ 
+                backgroundColor: updatingOrderId === uniqueOrderId ? '#6c757d' : '#28a745', 
+                border: 'none', 
+                cursor: updatingOrderId === uniqueOrderId ? 'not-allowed' : 'pointer' 
               }}
               disabled={updatingOrderId === uniqueOrderId}
             >
@@ -437,11 +421,8 @@ const OrderTracking = () => {
               </div>
              </div>
 
-            {/* Form Request Barang */}
-            {/* Form ini akan otomatis 'disabled' untuk Admin karena userDivision-nya kosong */}
             <div className="tracking-form-container">
               <div className="tracking-form">
-                {/* ... (Tidak ada perubahan di form request barang) ... */}
                 <h3>Request Barang Baru</h3>
                 <p>Silakan isi detail di bawah ini.</p>
                 
