@@ -430,13 +430,13 @@ function Dashboard() {
       { name: 'N8N', url: 'https://n8n.bandhayudha.com', icon: n8nlogo, description: 'Workflow Automation', isImage: true },
       { name: 'Task Management', url: 'https://task.bandhayudha.com', icon: openprojectlogo, description: 'Project & Task Manager', isImage: true },
       { 
-                name: 'Inventaris', 
-                url: '#', 
-                icon: '📦', 
-                description: 'Cek Stok Barang', 
-                isImage: false, 
-                action: () => setShowInventory(true) 
-              },
+                name: 'Inventaris', 
+                url: '#', 
+                icon: '📦', 
+                description: 'Cek Stok Barang', 
+                isImage: false, 
+                action: () => setShowInventory(true) 
+      },
     ];
 
 
